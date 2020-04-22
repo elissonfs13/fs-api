@@ -11,7 +11,6 @@ public class ImagemService {
 	
 	public List<String> getNomeArquivos(){
 		List<String> nomeArquivos = new ArrayList<>();
-		//File pasta = new File("\\src\\main\\resources\\static\\img\\bandeiras");
 		File pasta = new File("src/main/resources/static/img/bandeiras");
 		File[] arquivos = pasta.listFiles();
 		for (File arquivo : arquivos) {
