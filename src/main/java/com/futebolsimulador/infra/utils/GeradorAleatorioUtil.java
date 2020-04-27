@@ -5,7 +5,7 @@ import java.util.Random;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GeradorAleatorio {
+public class GeradorAleatorioUtil {
 	
 	public Integer getNumRandom(Integer numMax){
 		Random gerador = new Random();

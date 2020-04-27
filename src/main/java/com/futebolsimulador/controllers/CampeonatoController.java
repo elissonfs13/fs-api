@@ -1,4 +1,4 @@
-package com.futebolsimulador.resources;
+package com.futebolsimulador.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.futebolsimulador.domain.campeonato.Campeonato;
-import com.futebolsimulador.domain.campeonato.CampeonatoService;
+import com.futebolsimulador.domain.campeonato.CampeonatoFacade;
 import com.futebolsimulador.domain.selecao.Selecao;
 
 @CrossOrigin
@@ -23,24 +23,24 @@ import com.futebolsimulador.domain.selecao.Selecao;
 public class CampeonatoController {
 	
 	@Autowired
-	private CampeonatoService campeonatoService;
+	private CampeonatoFacade campeonatoFacade;
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Campeonato> geraCampeonato(@RequestBody ArrayList<Selecao> selecoes){
-		Campeonato campeonato = campeonatoService.geraCampeonato(selecoes);
+		Campeonato campeonato = campeonatoFacade.geraCampeonato(selecoes);
 		return new ResponseEntity<>(campeonato, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Campeonato>> buscarTodosCampeonatos(){
-		List<Campeonato> campeonatosBuscadas = campeonatoService.buscarTodos();
+		List<Campeonato> campeonatosBuscadas = campeonatoFacade.buscarTodos();
 		return new ResponseEntity<>(campeonatosBuscadas, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	public ResponseEntity<Campeonato> buscarCampeonatoPorId(@PathVariable Long id) {
-		Campeonato campeonato = campeonatoService.buscarPorId(id);
-		return new ResponseEntity<>(campeonato, HttpStatus.OK);
+		Campeonato campeonato = campeonatoFacade.buscarPorId(id);
+		return ResponseEntity.ok(campeonato);
 	}
 
 }

@@ -2,7 +2,6 @@ package com.futebolsimulador.domain.grupo;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,7 +35,7 @@ public class InfoSelecaoNoGrupo implements Serializable, Comparable<InfoSelecaoN
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "grupo_id")
 	@JsonBackReference
 	private Grupo grupo;

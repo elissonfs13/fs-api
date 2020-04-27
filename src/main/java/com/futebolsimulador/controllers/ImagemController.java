@@ -1,4 +1,4 @@
-package com.futebolsimulador.resources;
+package com.futebolsimulador.controllers;
 
 import java.util.List;
 
@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.futebolsimulador.service.ImagemService;
+import com.futebolsimulador.infra.utils.ImagemUtil;
 
 @RestController
 public class ImagemController {
 	
 	@Autowired
-	public ImagemService imagemService;
+	public ImagemUtil imagemUtil;
 	
 	@CrossOrigin	
 	@RequestMapping(method = RequestMethod.GET, value = "/bandeiras")
 	public ResponseEntity<List<String>> buscarTodasSelecoes(){
-		List<String> bandeiras = imagemService.getNomeArquivos();
+		List<String> bandeiras = imagemUtil.getNomeArquivos();
 		return new ResponseEntity<>(bandeiras, HttpStatus.OK);
 	} 
 

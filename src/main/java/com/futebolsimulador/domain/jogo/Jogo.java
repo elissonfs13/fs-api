@@ -2,7 +2,6 @@ package com.futebolsimulador.domain.jogo;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -54,7 +53,7 @@ public class Jogo implements Serializable {
 	
 	private Resultado resultado;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "grupo_id")
 	@JsonBackReference
 	@Setter

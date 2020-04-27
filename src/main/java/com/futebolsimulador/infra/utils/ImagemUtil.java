@@ -1,13 +1,13 @@
-package com.futebolsimulador.service;
+package com.futebolsimulador.infra.utils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ImagemService {
+@Component
+public class ImagemUtil {
 	
 	public List<String> getNomeArquivos(){
 		List<String> nomeArquivos = new ArrayList<>();
