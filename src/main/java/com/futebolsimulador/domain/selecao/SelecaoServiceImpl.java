@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.futebolsimulador.domain.jogo.JogoFacade;
 import com.futebolsimulador.exception.ExceptionMessage;
-import com.futebolsimulador.exception.SelecaoNaoEncontrada;
-import com.futebolsimulador.exception.SelecaoNaoValidada;
+import com.futebolsimulador.exception.ObjetoNaoEncontradoException;
+import com.futebolsimulador.exception.SelecaoNaoValidadaException;
 import com.futebolsimulador.exception.SelecaoParticipouCampeonatoException;
 import com.futebolsimulador.infra.utils.MessageUtils;
 
@@ -38,7 +38,7 @@ public class SelecaoServiceImpl implements SelecaoService {
 	public Selecao buscarPorId(Long id) {
 		Selecao selecao = selecaoRepository.findOne(id);
 		if (selecao == null) {
-			throw new SelecaoNaoEncontrada(messageUtil.getMensagemErro(
+			throw new ObjetoNaoEncontradoException(messageUtil.getMensagemErro(
 					ExceptionMessage.SELECAO_ID_NAO_ENCONTRADA, Arrays.asList(id)));
 		}
 		return selecao;
@@ -71,7 +71,7 @@ public class SelecaoServiceImpl implements SelecaoService {
 		}
 		
 		if (erros.size() > 0) {
-			throw new SelecaoNaoValidada(erros);
+			throw new SelecaoNaoValidadaException(erros);
 		}
 	}
 	
@@ -114,9 +114,9 @@ public class SelecaoServiceImpl implements SelecaoService {
 	private List<String> validaCamposSelecao(Selecao selecao) {
 		List<String> erros = new ArrayList<>();
 		
-		if (selecao.getNome().isEmpty()) 
+		if (selecao.getNome() == null || selecao.getNome().isEmpty()) 
 			erros.add(messageUtil.getMensagemErro(ExceptionMessage.CAMPO_NOME_OBG));
-		if (selecao.getAbrev().isEmpty()) 
+		if (selecao.getAbrev() == null || selecao.getAbrev().isEmpty()) 
 			erros.add(messageUtil.getMensagemErro(ExceptionMessage.CAMPO_SIGLA_OBG));
 		if (selecao.getBandeira() == null || selecao.getBandeira().isEmpty()) 
 			erros.add(messageUtil.getMensagemErro(ExceptionMessage.CAMPO_BANDEIRA_OBG));

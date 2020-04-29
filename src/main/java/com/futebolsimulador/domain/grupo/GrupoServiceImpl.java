@@ -29,7 +29,13 @@ public class GrupoServiceImpl implements GrupoService {
 		String[] nomeGrupos = {"A", "B", "C", "D", "E", "F", "G", "H"};
 		int num = 0;
 		for (int i = 0; i < 8; i++){
-			grupos.add(novoGrupo(campeonato, nomeGrupos[i], selecoes.get(num), selecoes.get(num+1), selecoes.get(num+2), selecoes.get(num+3)));
+			grupos.add(novoGrupo(campeonato, 
+								 nomeGrupos[i], 
+								 selecoes.get(num), 
+							 	 selecoes.get(num+1), 
+							 	 selecoes.get(num+2), 
+							 	 selecoes.get(num+3)));
+			
 			num = num + 4;
 		}
 		campeonato.setGrupos(grupos);
@@ -37,7 +43,7 @@ public class GrupoServiceImpl implements GrupoService {
 	
 	private Grupo novoGrupo(Campeonato campeonato, String nome, Selecao sel1, Selecao sel2, Selecao sel3, Selecao sel4){
 		Boolean empate = Boolean.TRUE;
-		Grupo grupo = new Grupo(nome);
+		Grupo grupo = criaNovoGrupo(nome);
 		ArrayList<InfoSelecaoNoGrupo> infoSelecoes = getInfosSels(grupo, sel1, sel2, sel3, sel4);
 		
 		geraJogosGrupo(grupo, empate, infoSelecoes);
@@ -46,6 +52,10 @@ public class GrupoServiceImpl implements GrupoService {
 		grupo.setInfoSelecoes(infoSelecoes);
 		grupo.setCampeonato(campeonato);
 		return grupoRepository.save(grupo);
+	}
+
+	private Grupo criaNovoGrupo(String nome) {
+		return grupoRepository.save(new Grupo(nome));
 	}
 
 	private void geraJogosGrupo(Grupo grupo, Boolean empate, ArrayList<InfoSelecaoNoGrupo> infoSels) {

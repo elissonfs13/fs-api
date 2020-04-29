@@ -3,7 +3,6 @@ package com.futebolsimulador.domain.jogo;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,12 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.futebolsimulador.domain.campeonato.Campeonato;
 import com.futebolsimulador.domain.grupo.Grupo;
 import com.futebolsimulador.domain.selecao.Selecao;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,27 +23,20 @@ import lombok.Setter;
 @Entity
 @Getter @Builder
 @NoArgsConstructor @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Jogo implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	
-
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@EqualsAndHashCode.Include
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne
 	private Selecao selecao1;
 	
 	private Integer gols1;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne
 	private Selecao selecao2;
 	
 	private Integer gols2;
@@ -58,6 +50,24 @@ public class Jogo implements Serializable {
 	@JsonBackReference
 	@Setter
 	private Grupo grupo;
+	
+	@ManyToOne
+    @JoinColumn(name="oitavas_campeonato_id")
+    @JsonBackReference
+    @Setter
+	private Campeonato oitavas;
+	
+	@ManyToOne
+    @JoinColumn(name="quartas_campeonato_id")
+    @JsonBackReference
+    @Setter
+	private Campeonato quartas;
+	
+	@ManyToOne
+    @JoinColumn(name="semis_campeonato_id")
+    @JsonBackReference
+    @Setter
+	private Campeonato semis;
 	
 	public Resultado verificarResultado() {
 		if (this.gols1 > this.gols2){

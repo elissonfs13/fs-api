@@ -18,7 +18,11 @@ public enum ExceptionMessage {
 	
 	SELECAO_NAO_ENCONTRADA("selecao.naoencontrada"),
 	SELECAO_ID_NAO_ENCONTRADA("selecao.id.naoencontrada"),
-	SELECAO_VALIDA_DELECAO("selecao.valida.delecao");
+	SELECAO_VALIDA_DELECAO("selecao.valida.delecao"),
+	
+	CAMPEONATO_NAO_ENCONTRADO("campeonato.naoencontrado"),
+	CAMPEONATO_ID_NAO_ENCONTRADO("campeonato.id.naoencontrado"),
+	CAMPEONATO_ERRO_GERAR("campeonato.erro.gerar");
 
 	@Getter
 	private String value;

@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.futebolsimulador.domain.commons.ApiErrors;
-import com.futebolsimulador.exception.SelecaoNaoEncontrada;
-import com.futebolsimulador.exception.SelecaoNaoValidada;
+import com.futebolsimulador.exception.CampeonatoNaoGeradoException;
+import com.futebolsimulador.exception.ObjetoNaoEncontradoException;
+import com.futebolsimulador.exception.SelecaoNaoValidadaException;
 import com.futebolsimulador.exception.SelecaoParticipouCampeonatoException;
 
 
@@ -23,6 +24,20 @@ public class ApplicationControllerAdvice {
         return new ApiErrors(mensagemErro);
     }
 	
+	@ExceptionHandler(ObjetoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handleObjetoNaoEncontradoException(ObjetoNaoEncontradoException ex){
+        String mensagemErro = ex.getMessage();
+        return new ApiErrors(mensagemErro);
+    }
+	
+	@ExceptionHandler(CampeonatoNaoGeradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handleCampeonatoNaoGeradoException(CampeonatoNaoGeradoException ex){
+        String mensagemErro = ex.getMessage();
+        return new ApiErrors(mensagemErro);
+    }
+	
 	@ExceptionHandler(SelecaoParticipouCampeonatoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrors handleSelecaoParticipouCampeonatoException(SelecaoParticipouCampeonatoException ex){
@@ -30,16 +45,9 @@ public class ApplicationControllerAdvice {
         return new ApiErrors(mensagemErro);
     }
 	
-	@ExceptionHandler(SelecaoNaoEncontrada.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiErrors handleSelecaoNaoEncontrada(SelecaoNaoEncontrada ex){
-        String mensagemErro = ex.getMessage();
-        return new ApiErrors(mensagemErro);
-    }
-	
-	@ExceptionHandler(SelecaoNaoValidada.class)
+	@ExceptionHandler(SelecaoNaoValidadaException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrors handleSelecaoParticipouCampeonatoException(SelecaoNaoValidada ex){
+    public ApiErrors handleSelecaoNaoValidadaException(SelecaoNaoValidadaException ex){
         List<String> mensagensErro = ex.getMensagens();
         return new ApiErrors(mensagensErro);
     }

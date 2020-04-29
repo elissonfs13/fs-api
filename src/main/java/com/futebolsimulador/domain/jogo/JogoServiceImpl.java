@@ -28,7 +28,7 @@ public class JogoServiceImpl implements JogoService {
 	
 	public boolean selecaoParticipouCampeonato(Selecao selecao) {
 		List<Jogo> jogos = jogoRepository.findBySelecao1(selecao);
-		return jogos.isEmpty() ? false : true;
+		return (jogos == null || jogos.isEmpty()) ? false : true;
 	}
 
 	private Jogo criarNovoJogo(Selecao selecao1, Selecao selecao2, Boolean podeEmpatar) {

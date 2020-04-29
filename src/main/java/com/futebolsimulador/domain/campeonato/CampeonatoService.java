@@ -10,6 +10,5 @@ public interface CampeonatoService {
 	Campeonato novoCampeonato(ArrayList<Selecao> selecoes);
 	List<Campeonato> buscarTodos();
 	Campeonato buscarPorId(Long id);
-	Campeonato geraCampeonato(ArrayList<Selecao> selecoes);
 
 }

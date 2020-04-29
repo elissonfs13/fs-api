@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,7 +26,7 @@ public class Selecao implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
 	
@@ -39,7 +37,6 @@ public class Selecao implements Serializable {
 	
 	private Integer nivel;
 	
-	@NotEmpty(message = "Campo abrev é obrigatório")
 	private String abrev;
 	
 	@Enumerated(EnumType.STRING)

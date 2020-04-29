@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.futebolsimulador.domain.selecao.Selecao;
 
@@ -25,11 +24,6 @@ public class CampeonatoFacade {
 	
 	public Campeonato buscarPorId(Long id) {
 		return campeonatoService.buscarPorId(id);
-	}
-
-	@Transactional
-	public Campeonato geraCampeonato(ArrayList<Selecao> selecoes) {
-		return campeonatoService.geraCampeonato(selecoes);
 	}
 
 }
