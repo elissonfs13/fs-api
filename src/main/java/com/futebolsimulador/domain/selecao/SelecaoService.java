@@ -2,6 +2,8 @@ package com.futebolsimulador.domain.selecao;
 
 import java.util.List;
 
+import com.futebolsimulador.controllers.dto.GraficoListaValorDTO;
+
 public interface SelecaoService {
 	
 	Selecao cadastrar(Selecao selecao);
@@ -10,5 +12,6 @@ public interface SelecaoService {
 	void excluir(Long IdSelecao);
 	Selecao alterar(Selecao selecao, Long id);
 	void preCadastroSelecoes();
+	GraficoListaValorDTO buscarPosicoesSelecao(Long idSelecao);
 
 }

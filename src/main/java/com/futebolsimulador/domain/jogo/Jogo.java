@@ -94,5 +94,12 @@ public class Jogo implements Serializable {
 			return this.selecao2;
 		}
 	}
+	
+	public boolean selecaoEstaPresente(Selecao selecao) {
+		if (this.selecao1.equals(selecao) || this.selecao2.equals(selecao)) {
+			return true;
+		}
+		return false;
+	}
 
 }

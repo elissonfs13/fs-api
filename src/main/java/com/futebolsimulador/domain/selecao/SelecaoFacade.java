@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.futebolsimulador.controllers.dto.GraficoListaValorDTO;
+
 @Component
 public class SelecaoFacade {
 	
@@ -33,6 +35,10 @@ public class SelecaoFacade {
 	
 	public void preCadastroSelecoes(){
 		selecaoService.preCadastroSelecoes();
+	}
+
+	public GraficoListaValorDTO buscarPosicoesSelecao(Long idSelecao) {
+		return selecaoService.buscarPosicoesSelecao(idSelecao);
 	}
 
 }

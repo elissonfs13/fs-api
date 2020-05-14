@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.futebolsimulador.controllers.dto.GraficoListaValorDTO;
+import com.futebolsimulador.domain.campeonato.CampeonatoFacade;
 import com.futebolsimulador.domain.jogo.JogoFacade;
 import com.futebolsimulador.exception.ExceptionMessage;
 import com.futebolsimulador.exception.ObjetoNaoEncontradoException;
@@ -24,17 +26,23 @@ public class SelecaoServiceImpl implements SelecaoService {
 	private JogoFacade jogoFacade;
 	
 	@Autowired
+	private CampeonatoFacade campeonatoFacade;
+	
+	@Autowired
 	protected MessageUtils messageUtil;
 	
+	@Override
 	public Selecao cadastrar(Selecao selecao) {
 		validaSelecao(selecao, Boolean.FALSE);
 		return selecaoRepository.save(selecao);
 	}
 
+	@Override
 	public List<Selecao> buscarTodos() {
 		return selecaoRepository.findAll();
 	}
 	
+	@Override
 	public Selecao buscarPorId(Long id) {
 		Selecao selecao = selecaoRepository.findOne(id);
 		if (selecao == null) {
@@ -44,6 +52,7 @@ public class SelecaoServiceImpl implements SelecaoService {
 		return selecao;
 	}
 	
+	@Override
 	public void excluir(Long idSelecao) {
 		Selecao selecao = buscarPorId(idSelecao);
 		if (podeExcluir(selecao)) {
@@ -51,14 +60,22 @@ public class SelecaoServiceImpl implements SelecaoService {
 		}
 	}
 	
+	@Override
 	public Selecao alterar(Selecao selecao, Long id) {
 		validaSelecao(selecao, Boolean.TRUE);
 		return selecaoRepository.save(alterarAtributos(selecao, id));
 	}
 	
+	@Override
 	public void preCadastroSelecoes(){
 		selecaoRepository.deleteAll();
 		cadastraSelecoes();
+	}
+	
+	@Override
+	public GraficoListaValorDTO buscarPosicoesSelecao(Long idSelecao) {
+		Selecao selecao = buscarPorId(idSelecao);
+		return campeonatoFacade.buscarSelecaoEmCampeonato(selecao);
 	}
 	
 	private void validaSelecao(Selecao selecao, Boolean edicao) {
@@ -232,5 +249,7 @@ public class SelecaoServiceImpl implements SelecaoService {
 		
 		selecaoRepository.save(selecao);
 	}
+
+	
 
 }

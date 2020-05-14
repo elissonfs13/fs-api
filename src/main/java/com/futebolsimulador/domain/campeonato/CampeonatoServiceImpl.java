@@ -2,12 +2,16 @@ package com.futebolsimulador.domain.campeonato;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.futebolsimulador.controllers.dto.GraficoListaValorDTO;
+import com.futebolsimulador.controllers.dto.GraficoValorDTO;
 import com.futebolsimulador.domain.grupo.Grupo;
 import com.futebolsimulador.domain.grupo.GrupoFacade;
 import com.futebolsimulador.domain.jogo.Jogo;
@@ -33,19 +37,21 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 	@Autowired
 	protected MessageUtils messageUtil;
 	
+	@Override
 	public Campeonato novoCampeonato(ArrayList<Selecao> selecoes) {
 		try {
 			return geraCampeonato(selecoes);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new CampeonatoNaoGeradoException(messageUtil.getMensagemErro(ExceptionMessage.CAMPEONATO_ERRO_GERAR));
 		}
 	}
 	
+	@Override
 	public List<Campeonato> buscarTodos() {
-		return campeonatoRepository.findAll();
+		return campeonatoRepository.findAllByOrderByIdAsc();
 	}
 	
+	@Override
 	public Campeonato buscarPorId(Long id) {
 		Campeonato campeonato = campeonatoRepository.findOne(id);
 		if (campeonato == null) {
@@ -53,6 +59,121 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 					ExceptionMessage.CAMPEONATO_ID_NAO_ENCONTRADO, Arrays.asList(id)));
 		}
 		return campeonato;
+	}
+	
+	@Override
+	public List<GraficoValorDTO> buscarCampeoesPorConfederacao() {
+		List<GraficoValorDTO> selCampeas = new ArrayList<>();
+		List<Campeonato> campeonatos = buscarTodos();
+		for (Campeonato campeonato : campeonatos) {
+			geraListaSelecoes(selCampeas, campeonato.getPrimeiro().getConfederacao().toString());
+		}
+		Collections.sort(selCampeas);
+		return selCampeas;
+	}
+	
+	@Override
+	public List<GraficoValorDTO> buscarCampeoesPorSelecao() {
+		List<GraficoValorDTO> selCampeas = new ArrayList<>();
+		List<Campeonato> campeonatos = buscarTodos();
+		for (Campeonato campeonato : campeonatos) {
+			geraListaSelecoes(selCampeas, campeonato.getPrimeiro().getNome());
+		}
+		Collections.sort(selCampeas);
+		return selCampeas;
+	}
+	
+	@Override
+	public List<GraficoValorDTO> buscarCampeoesPorBandeira() {
+		List<GraficoValorDTO> selCampeas = new ArrayList<>();
+		List<Campeonato> campeonatos = buscarTodos();
+		for (Campeonato campeonato : campeonatos) {
+			geraListaSelecoes(selCampeas, campeonato.getPrimeiro().getBandeira().substring(0, 2));
+		}
+		return selCampeas;
+	}
+	
+	@Override
+	public GraficoListaValorDTO buscarSelecaoEmCampeonato(Selecao selecao) {
+		List<Campeonato> campeonatos = buscarTodos();
+		List<Integer> posicoes = campeonatos.stream()
+				.map(campeonato -> campeonato.verificaPosicao(selecao))
+				.collect(Collectors.toList());
+		
+		return GraficoListaValorDTO.builder()
+							  .identificador(selecao.getNome())
+							  .valores(posicoes)
+							  .build();
+	}
+	
+	@Override
+	public List<GraficoValorDTO> buscarPosicoesPorCampeonato(Long campeonatoId) {
+		List<GraficoValorDTO> posicaoSelecoes = new ArrayList<>();
+		Campeonato campeonato = buscarPorId(campeonatoId);
+		
+		posicaoSelecoes.add(geraPosicaoSelecao(campeonato.getPrimeiro(), Posicao.CAMPEAO));
+		posicaoSelecoes.add(geraPosicaoSelecao(campeonato.getSegundo(), Posicao.VICE_CAMPEAO));
+		posicaoSelecoes.add(geraPosicaoSelecao(campeonato.getTerceiro(), Posicao.TERCEIRO));
+		posicaoSelecoes.add(geraPosicaoSelecao(campeonato.getQuarto(), Posicao.QUARTO));
+		
+		campeonato.getQuartasFinal().stream().forEach(jogo -> 
+			posicaoSelecoes.add(geraPosicaoSelecao(jogo.getPerdedor(), Posicao.QUARTAS_FINAIS)));
+		
+		campeonato.getOitavasFinal().stream().forEach(jogo -> 
+			posicaoSelecoes.add(geraPosicaoSelecao(jogo.getPerdedor(), Posicao.OITAVAS_FINAIS)));
+		
+		campeonato.getGrupos().stream().forEach(grupo -> {
+			posicaoSelecoes.add(geraPosicaoSelecao(grupo.getTerceiro(), Posicao.FASE_GRUPOS));
+			posicaoSelecoes.add(geraPosicaoSelecao(grupo.getQuarto(), Posicao.FASE_GRUPOS));
+		});
+		
+		return posicaoSelecoes;
+	}
+	
+	
+	@Override
+	public List<GraficoValorDTO> buscarParticipantesPorSelecao() {
+		List<GraficoValorDTO> selParticipantes = new ArrayList<>();
+		List<Campeonato> campeonatos = buscarTodos();
+		for (Campeonato campeonato : campeonatos) {
+			campeonato.selecoesParticipantes().stream()
+				.forEach(selecao -> geraListaSelecoes(selParticipantes, selecao.getNome()));
+		}
+		Collections.sort(selParticipantes);
+		return selParticipantes;
+	}
+	
+	@Override
+	public List<GraficoValorDTO> buscarParticipantesPorBandeira() {
+		List<GraficoValorDTO> selParticipantes = new ArrayList<>();
+		List<Campeonato> campeonatos = buscarTodos();
+		for (Campeonato campeonato : campeonatos) {
+			campeonato.selecoesParticipantes().stream()
+				.forEach(selecao -> geraListaSelecoes(selParticipantes, selecao.getBandeira().substring(0, 2)));
+		}
+		Collections.sort(selParticipantes);
+		return selParticipantes;
+	}
+	
+	private GraficoValorDTO geraPosicaoSelecao(Selecao selecao, Posicao posicao) {
+		return GraficoValorDTO.builder()
+				.identificador(selecao.getBandeira().substring(0, 2))
+				.valor(posicao.getValor())
+				.build();
+	}
+	
+	private void geraListaSelecoes(List<GraficoValorDTO> valores, String identificador) {
+		for (GraficoValorDTO valor : valores) {
+			if (valor.getIdentificador().equals(identificador)) {
+				valor.adicionaValor();
+				return;
+			}
+		}
+		
+		valores.add(GraficoValorDTO.builder()
+								   .identificador(identificador)
+								   .valor(new Integer(1))
+								   .build());
 	}
 
 	@Transactional
@@ -134,5 +255,7 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 	private Jogo geraJogo(Selecao selecao1, Selecao selecao2, Boolean empate) {
 		return jogoFacade.geraJogo(selecao1, selecao2, empate);
 	}
+
+	
 
 }

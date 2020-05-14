@@ -2,6 +2,7 @@ package com.futebolsimulador.domain.grupo;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,6 +61,29 @@ public class Grupo implements Serializable {
 	
 	public Selecao getSegundo() {
 		return this.infoSelecoes.get(1).getSelecao();
+	}
+	
+	public Selecao getTerceiro() {
+		return this.infoSelecoes.get(2).getSelecao();
+	}
+	
+	public Selecao getQuarto() {
+		return this.infoSelecoes.get(3).getSelecao();
+	}
+	
+	public boolean selecaoEstaPresente(Selecao selecao) {
+		for (Jogo jogo : this.jogos) {
+			if (jogo.selecaoEstaPresente(selecao)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public List<Selecao> getSelecoes() {
+		return this.infoSelecoes.stream()
+				.map(infoSelecao -> infoSelecao.getSelecao())
+				.collect(Collectors.toList());
 	}
 
 }
